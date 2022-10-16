@@ -5,7 +5,7 @@
 
 #include "PerlinNoise.h"
 
-FractalNoise::FractalNoise(std::vector<class PerlinNoise> Noises): noises(noises) {}
+FractalNoise::FractalNoise(std::vector<class PerlinNoise> Noises): noises(Noises) {}
 
 float FractalNoise::Sample(FVector Location) const
 {

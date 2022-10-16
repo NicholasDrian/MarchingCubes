@@ -7,6 +7,6 @@
 
 AMarchingCubesGameModeBase::AMarchingCubesGameModeBase()
 {
-	DefaultPawnClass = ADebugPawn::StaticClass();
+	//DefaultPawnClass = ADebugPawn::StaticClass();
 	Tests::RunTests();
 }

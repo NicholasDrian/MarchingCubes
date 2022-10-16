@@ -28,10 +28,11 @@ public:
 
 public:
 
-	float blockSize;
-	int32 blockCount;
-	float loadDist;
-	class FractalNoise* noise;
+	static constexpr float blockSize = 100;
+	static constexpr int32 blockCount = 20;
+	static constexpr float chunkSize = blockSize * blockCount;
+	static constexpr float loadDist = 2;
+	static class FractalNoise* noise;
 
 private:
 

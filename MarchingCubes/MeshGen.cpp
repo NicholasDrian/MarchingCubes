@@ -57,7 +57,11 @@ void MeshGen::RecursiveProcess(Node& n, std::vector<FVector>& perimiter, float t
 	for (int j = 0; j < 3; j++) {
 		Connection c = n.connections[(i + j) % 3];
 		if (c.node->val < threshold) {
-			perimiter.push_back((n.position + c.node->position) / 2);
+			float distAbove = n.val - threshold;
+			float distBelow = threshold - c.node->val;
+			float totalDist = distAbove + distBelow;
+			perimiter.push_back(n.position * distBelow / totalDist + c.node->position * distAbove / totalDist);
+			//perimiter.push_back((n.position + c.node->position) / 2);
 		}
 		else {
 			if (!c.node->checked) {

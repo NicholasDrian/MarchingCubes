@@ -11,5 +11,6 @@ public:
 	static void RunTests();
 private:
 	static void TestMeshGen();
+	static void TestPerlin();
 	static void PrintMesh(const struct Mesh& mesh);
 };

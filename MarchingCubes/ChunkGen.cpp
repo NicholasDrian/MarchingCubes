@@ -8,17 +8,15 @@
 #include "MeshGen.h"
 #include "Chunk.h"
 
+FractalNoise* AChunkGen::noise = new FractalNoise({
+	PerlinNoise(FVector(1000.0, 1000.0, 1000.0), 1.0, time(0))
+	});
+
 // Sets default values
 AChunkGen::AChunkGen()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	blockSize = 100.0;
-	blockCount = 20;
-	loadDist = 3.0; // units: blocks
-
-	PerlinNoise noise1(FVector(1000.0, 1000.0, 1000.0), 1.0, time(0));
-	noise = new FractalNoise({ noise1 });
 }
 
 // Called when the game starts or when spawned
@@ -40,25 +38,27 @@ void AChunkGen::RemoveChunks(const FIntVector& PawnLocation)
 {
 	TArray<FIntVector> trash;
 	for (TPair<FIntVector, AChunk*> e : chunks) {
-		if (Distance(e.Key, PawnLocation) > loadDist * blockSize * blockCount) {
+		if (Distance(e.Key, PawnLocation) > loadDist * chunkSize) {
 			trash.Add(e.Key);
 		}
 	}
 	for (FIntVector key : trash) {
-		chunks[key]->Destroy();
+		AChunk* chunk = chunks[key];
 		chunks.Remove(key);
+		chunk->Destroy();
 	}
 }
 
 void AChunkGen::AddChunks(const FIntVector& PawnLocation)
 {
-	for (int32 i = -blockCount / 2; i <= blockCount / 2; i++) {
-		for (int32 j = -blockCount / 2; j <= blockCount / 2; j++) {
-			FIntVector block(PawnLocation[0] + i, PawnLocation[1] + j, 0);
-			if (Distance(block, PawnLocation) < loadDist && !chunks.Contains(block)) {
-				FVector worldLocation((float)block[0], (float)block[1], 0.0);
-				worldLocation *= blockSize * blockCount;
-				chunks[block] = GetWorld()->SpawnActor<AChunk>(worldLocation, FRotator(), FActorSpawnParameters());
+	for (int32 i = -loadDist / 2; i <= loadDist / 2; i++) {
+		for (int32 j = -loadDist / 2; j <= loadDist / 2; j++) {
+			FIntVector chunk(PawnLocation[0] + i, PawnLocation[1] + j, 0);
+			if (Distance(chunk, PawnLocation) < loadDist && !chunks.Contains(chunk)) {
+				FVector worldLocation((float)chunk[0], (float)chunk[1], 0.0);
+				worldLocation *= chunkSize;
+				UE_LOG(LogTemp, Warning, TEXT("chunk spawning at %f, %f"), worldLocation[0], worldLocation[1]);
+				chunks.Add(chunk, GetWorld()->SpawnActor<AChunk>(worldLocation, FRotator(), FActorSpawnParameters()));
 			}
 		}
 	}
@@ -71,28 +71,9 @@ FVector AChunkGen::GetPawnLocation() const
 	return FVector();
 }
 
-Mesh AChunkGen::Consolidate(std::vector<Mesh> meshes) const
-{
-	std::vector<FVector> Vertices;
-	std::vector<uint32> Indices;
-	TMap<FVector, uint32> map;
-	for (Mesh mesh : meshes) {
-		for (FVector v : mesh.vertices) {
-			if (!map.Contains(v)) {
-				map.Add(v, Vertices.size());
-				Vertices.push_back(v);
-			}
-		}
-		for (uint32 i : mesh.indecies) {
-			Indices.push_back(map[mesh.vertices[i]]);
-		}
-	}
-	return { Vertices, Indices };
-}
-
 FIntVector AChunkGen::NearestChunk(FVector location) const {
-	int32 x = (int32)(location[0] / blockSize / blockCount);
-	int32 y = (int32)(location[1] / blockSize / blockCount);
+	int32 x = (int32)(location[0] / chunkSize);
+	int32 y = (int32)(location[1] / chunkSize);
 	return { x, y, 0 };
 }
 

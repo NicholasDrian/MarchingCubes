@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Chunk.generated.h"
 
+struct Mesh;
+
 UCLASS()
 class MARCHINGCUBES_API AChunk : public AActor
 {
@@ -25,6 +27,12 @@ public:
 
 private:
 
-	class UProceduralMeshComponent* mesh;
+	class UProceduralMeshComponent* proceduralMesh;
+
+private:
+
+	void Generate();
+	void Finalize(Mesh mesh);
+	Mesh Consolidate(std::vector<Mesh> meshes) const;
 
 };
