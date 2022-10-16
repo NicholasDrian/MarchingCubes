@@ -28,7 +28,7 @@ struct Node {
 
 struct Mesh {
 	std::vector<FVector> vertices;
-	std::vector<uint8> indecies;
+	std::vector<uint32> indecies;
 };
 
 class MARCHINGCUBES_API MeshGen

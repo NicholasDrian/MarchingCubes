@@ -3,6 +3,9 @@
 
 #include "MeshGen.h"
 
+#include "PerlinNoise.h"
+#include <unordered_set>
+
 
 std::vector<Mesh> MeshGen::Gen(std::vector<FVector> positions, std::vector<float> vals, float threshold)
 {
@@ -95,4 +98,4 @@ Mesh MeshGen::Triangulate(const std::vector<FVector>& perimiter)
 		res.indecies = { 0, 1, 2, 0, 2, 4, 2, 3, 4, 4, 5, 0 }; break;
 	}
 	return res;
-}  
+}
