@@ -61,7 +61,6 @@ void MeshGen::RecursiveProcess(Node& n, std::vector<FVector>& perimiter, float t
 			float distBelow = threshold - c.node->val;
 			float totalDist = distAbove + distBelow;
 			perimiter.push_back(n.position * distBelow / totalDist + c.node->position * distAbove / totalDist);
-			//perimiter.push_back((n.position + c.node->position) / 2);
 		}
 		else {
 			if (!c.node->checked) {

@@ -9,7 +9,7 @@
 #include "Chunk.h"
 
 FractalNoise* AChunkGen::noise = new FractalNoise({
-	PerlinNoise(FVector(1000.0, 1000.0, 1000.0), 1.0, time(0))
+	PerlinNoise(FVector(5000.0, 5000.0, 5000.0), 1.0, time(0))
 	});
 
 // Sets default values

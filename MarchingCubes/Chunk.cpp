@@ -38,12 +38,14 @@ void AChunk::Generate() {
 	for (int32 i = 0; i <= count; i++) {
 		for (int32 j = 0; j <= count; j++) {
 			for (int32 k = 0; k <= count; k++) {
-				FVector location = GetActorLocation() + FVector(i, j, k) * AChunkGen::blockSize;
-				noise[i][j][k] = AChunkGen::noise->Sample(location);
+				FVector location = FVector(i, j, k) * AChunkGen::blockSize;
+				noise[i][j][k] = AChunkGen::noise->Sample(GetActorLocation() + location);
 				locations[i][j][k] = location;
 			}
 		}
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("location min x %f, max x %f"), locations[0][0][0][0], locations[count][0][0][0]);
 	std::vector<Mesh> meshes;
 	for (int32 i = 0; i < count; i++) {
 		for (int32 j = 0; j < count; j++) {

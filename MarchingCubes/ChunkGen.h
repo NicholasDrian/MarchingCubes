@@ -28,7 +28,7 @@ public:
 
 public:
 
-	static constexpr float blockSize = 100;
+	static constexpr float blockSize = 1000;
 	static constexpr int32 blockCount = 20;
 	static constexpr float chunkSize = blockSize * blockCount;
 	static constexpr float loadDist = 2;
