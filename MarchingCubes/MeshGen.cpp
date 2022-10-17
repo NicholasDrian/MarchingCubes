@@ -92,13 +92,13 @@ Mesh MeshGen::Triangulate(const std::vector<FVector>& perimiter)
 	uint8 size = perimiter.size();
 	switch (size) {
 	case 3:
-		res.indecies = { 0, 1, 2 }; break;
+		res.indecies = { 2, 1, 0 }; break;
 	case 4:
-		res.indecies = { 0, 1, 2, 2, 3, 0 }; break;
+		res.indecies = { 0, 3, 2, 2, 1, 0 }; break;
 	case 5:
-		res.indecies = { 0, 1, 2, 2, 3, 0, 3, 4, 0}; break;
+		res.indecies = { 0, 4, 3, 0, 3, 2, 2, 1, 0 }; break;
 	case 6:
-		res.indecies = { 0, 1, 2, 0, 2, 4, 2, 3, 4, 4, 5, 0 }; break;
+		res.indecies = { 0, 5, 4, 4, 3, 2, 4, 2, 0, 2, 1, 0 }; break;
 	}
 	return res;
 }

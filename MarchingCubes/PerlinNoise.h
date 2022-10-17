@@ -16,9 +16,11 @@ public:
 	float Sample(std::vector<float> Location) const;
 	float Sample(FVector Location) const;
 
+public:
+	float outScale;
+
 private:
 
-	float outScale;
 	uint32 seed;
 	std::vector<float> dimensions;
 	float reduce(std::vector<float> vals, std::vector<float> weights) const;

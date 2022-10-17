@@ -9,7 +9,7 @@
 #include "Chunk.h"
 
 FractalNoise* AChunkGen::noise = new FractalNoise({
-	PerlinNoise(FVector(5000.0, 5000.0, 5000.0), 1.0, time(0))
+	PerlinNoise(FVector(1000.0, 1000.0, 1000.0), 1.0, time(0))
 	});
 
 // Sets default values
@@ -57,7 +57,6 @@ void AChunkGen::AddChunks(const FIntVector& PawnLocation)
 			if (Distance(chunk, PawnLocation) < loadDist && !chunks.Contains(chunk)) {
 				FVector worldLocation((float)chunk[0], (float)chunk[1], 0.0);
 				worldLocation *= chunkSize;
-				UE_LOG(LogTemp, Warning, TEXT("chunk spawning at %f, %f"), worldLocation[0], worldLocation[1]);
 				chunks.Add(chunk, GetWorld()->SpawnActor<AChunk>(worldLocation, FRotator(), FActorSpawnParameters()));
 			}
 		}

@@ -28,17 +28,16 @@ public:
 
 public:
 
-	static constexpr float blockSize = 1000;
+	static constexpr float blockSize = 100;
 	static constexpr int32 blockCount = 20;
 	static constexpr float chunkSize = blockSize * blockCount;
-	static constexpr float loadDist = 2;
+	static constexpr float loadDist = 3;
 	static class FractalNoise* noise;
 
 private:
 
 	FVector GetPawnLocation() const;
 	TMap<FIntVector, class AChunk*> chunks;
-	struct Mesh Consolidate(std::vector<struct Mesh> meshes) const;
 	FIntVector NearestChunk(FVector location) const;
 	float Distance(FIntVector a, FIntVector b) const;
 

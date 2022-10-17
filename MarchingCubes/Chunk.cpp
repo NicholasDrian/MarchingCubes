@@ -28,52 +28,55 @@ void AChunk::BeginPlay()
 void AChunk::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AChunk::Generate() {
 	constexpr int32 count = AChunkGen::blockCount;
 	float noise[count + 1][count + 1][count + 1];
 	FVector locations[count + 1][count + 1][count + 1];
-	for (int32 i = 0; i <= count; i++) {
-		for (int32 j = 0; j <= count; j++) {
-			for (int32 k = 0; k <= count; k++) {
-				FVector location = FVector(i, j, k) * AChunkGen::blockSize;
-				noise[i][j][k] = AChunkGen::noise->Sample(GetActorLocation() + location);
-				locations[i][j][k] = location;
+	for (int32 z = 0; z <= count; z++) {
+		float bias = 1.0 - (float) z / count;
+		bias *= AChunkGen::noise->MaxVal;
+		for (int32 x = 0; x <= count; x++) {
+			for (int32 y = 0; y <= count; y++) {
+				FVector location = FVector(x, y, z) * AChunkGen::blockSize;
+				float sample = AChunkGen::noise->Sample(GetActorLocation() + location);
+				sample += bias;
+				sample *= bias;
+				noise[x][y][z] = sample;
+				locations[x][y][z] = location;
 			}
 		}
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("location min x %f, max x %f"), locations[0][0][0][0], locations[count][0][0][0]);
 	std::vector<Mesh> meshes;
-	for (int32 i = 0; i < count; i++) {
-		for (int32 j = 0; j < count; j++) {
-			for (int32 k = 0; k < count; k++) {
+	for (int32 x = 0; x < count; x++) {
+		for (int32 y = 0; y < count; y++) {
+			for (int32 z = 0; z < count; z++) {
 				//    0      3        back
 				//  1      2          front
 				//                    X 5 -> 6
 				//    4      7        Y 5 -> 4
 				//  5      6          Z 5 -> 1
 				std::vector<FVector> positions = {
-					locations[i][j + 1][k + 1],
-					locations[i][j][k + 1],
-					locations[i + 1][j][k + 1],
-					locations[i + 1][j + 1][k + 1],
-					locations[i][j + 1][k],
-					locations[i][j][k],
-					locations[i + 1][j][k],
-					locations[i + 1][j + 1][k]
+					locations[x][y + 1][z + 1],
+					locations[x][y][z + 1],
+					locations[x + 1][y][z + 1],
+					locations[x + 1][y + 1][z + 1],
+					locations[x][y + 1][z],
+					locations[x][y][z],
+					locations[x + 1][y][z],
+					locations[x + 1][y + 1][z]
 				};
 				std::vector<float> vals = {
-					noise[i][j + 1][k + 1],
-					noise[i][j][k + 1],
-					noise[i + 1][j][k + 1],
-					noise[i + 1][j + 1][k + 1],
-					noise[i][j + 1][k],
-					noise[i][j][k],
-					noise[i + 1][j][k],
-					noise[i + 1][j + 1][k]
+					noise[x][y + 1][z + 1],
+					noise[x][y][z + 1],
+					noise[x + 1][y][z + 1],
+					noise[x + 1][y + 1][z + 1],
+					noise[x][y + 1][z],
+					noise[x][y][z],
+					noise[x + 1][y][z],
+					noise[x + 1][y + 1][z]
 				};
 				std::vector<Mesh> cube = MeshGen::Gen(positions, vals, 0.5);
 				meshes.insert(meshes.begin(), cube.begin(), cube.end());

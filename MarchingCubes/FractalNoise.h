@@ -13,6 +13,8 @@ class MARCHINGCUBES_API FractalNoise
 public:
 	FractalNoise(std::vector<class PerlinNoise> Noises);
 	float Sample(FVector Location) const;
+public:
+	float MaxVal;
 private:
 	std::vector<class PerlinNoise> noises;
 };

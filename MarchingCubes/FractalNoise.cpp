@@ -5,7 +5,12 @@
 
 #include "PerlinNoise.h"
 
-FractalNoise::FractalNoise(std::vector<class PerlinNoise> Noises): noises(Noises) {}
+FractalNoise::FractalNoise(std::vector<class PerlinNoise> Noises): noises(Noises) {
+    MaxVal = 0;
+    for (PerlinNoise noise : Noises) {
+        MaxVal += noise.outScale;
+    }
+}
 
 float FractalNoise::Sample(FVector Location) const
 {
